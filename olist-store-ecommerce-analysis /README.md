@@ -1,74 +1,54 @@
 <div align="center">
 
-# 📦 Olist E-Commerce Analytics & T-SQL Pipeline
-*Exploring 100,000+ real-world Brazilian marketplace orders using MS SQL Server.*
+  <img src="https://miro.medium.com/0*A4BVgM4TzQPa0nHe" alt="Olist Logo" width="320" style="border-radius: 12px; box-shadow: 0px 4px 20px rgba(0,0,0,0.3);"/>
 
-<img src="https://miro.medium.com/0*A4BVgM4TzQPa0nHe" alt="Olist Logo" width="280"/>
+  <h1>📦 Olist E-Commerce Analytics & T-SQL Pipeline</h1>
+  <p><em>Transforming 100,000+ raw Brazilian marketplace logs into production-grade business intelligence using MS SQL Server.</em></p>
 
-<p>
-  <img src="https://img.shields.io/badge/Platform-MS%20SQL%20Server-red?style=for-the-badge&logo=microsoft-sql-server" />
-  <img src="https://img.shields.io/badge/Language-T--SQL-blue?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge" />
-</p>
+  <p>
+    <img src="https://img.shields.io/badge/Platform-MS%20SQL%20Server-red?style=for-the-badge&logo=microsoft-sql-server&logoColor=white" />
+    <img src="https://img.shields.io/badge/Language-T--SQL-blue?style=for-the-badge&logo=databricks&logoColor=white" />
+    <img src="https://img.shields.io/badge/Dataset-Kaggle-orange?style=for-the-badge&logo=kaggle&logoColor=white" />
+    <img src="https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge" />
+  </p>
 
 </div>
 
 ---
 
-## 🚀 About the Project
-Olist is a major Brazilian e-commerce platform that connects small local merchants with online buyers under a single roof. Managing thousands of transactions, shipping logs, customer profiles, and product details across multiple tables can get messy very quickly. 
+## 🎯 1. Business Context & Executive Summary
+Olist connects small-to-medium-sized merchants across Brazil to major e-commerce storefronts under a single contract. Managing thousands of transactions, shipping logs, customer profiles, and product details across multiple relational tables can get overwhelming very quickly. 
 
-For this project, I built a complete **15-query T-SQL analytical workflow** in MS SQL Server to turn raw transactional logs into clear, actionable business insights. Think of it like an assembly line: we start by looking at basic customer counts and revenue, move into handling logistics and shipping delays, apply advanced window math, and finish by building an automated tool for customer support.
-
----
-
-## 📊 Dataset Details
-This project uses the official **Brazilian E-Commerce Public Dataset by Olist**, available on Kaggle. It covers roughly **100,000 orders placed between 2016 and 2018** across various marketplaces in Brazil. 
-
-* **Source / Official Link:** [Kaggle - Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
-* **Fun Fact:** The data is fully anonymized, and store partners in the review texts were replaced with *Game of Thrones* great house names!
-
-### Core Tables Used in the Database:
-* `olist_customers_dataset.csv` — Customer geographic info and unique IDs.
-* `olist_orders_dataset.csv` — Order lifecycles, statuses, and purchase/delivery timestamps.
-* `olist_order_items_dataset.csv` — Individual item line prices and freight shipping costs.
-* `olist_order_payments_dataset.csv` — Payment methods (credit cards, boletos, vouchers) and transaction amounts.
-* `olist_products_dataset.csv` — Product catalog data and categories.
-* `olist_sellers_dataset.csv` — Merchant origin city and state locations.
-* `product_category_name_translation.csv` — Portuguese-to-English translations for categories.
+For this project, I built a complete **15-query T-SQL analytical workflow** in MS SQL Server to turn raw transactional logs into clear, actionable business insights. Think of it like a data factory assembly line: we start by looking at basic customer counts and revenue, move into handling logistics and shipping delays, apply advanced window math, and finish by building an automated tool for customer support.
 
 ---
 
-## 🛠️ How the SQL Script Flows (Step-by-Step)
+## 📊 2. Dataset Architecture & Source Details
+This project utilizes the official **Brazilian E-Commerce Public Dataset by Olist**, hosted on Kaggle[cite: 1]. It features information on **100,000 orders from 2016 to 2018** made at multiple marketplaces in Brazil[cite: 1]. 
 
-Here is a quick look at what the 15 queries actually accomplish, broken down by how the analysis progresses:
+* **🔗 Official Source:** [Kaggle - Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)[cite: 1]
+* **🕵️‍♂️ Fun Fact:** The data is real commercial data that has been anonymized, and references to companies and partners in the review texts were replaced with the names of *Game of Thrones* great houses[cite: 1]!
 
-1. **Foundational Exploration (Queries 1–6):** 
-   * Counted unique physical customers (`COUNT DISTINCT`) to find our true user base size.
-   * Mapped the top 5 customer cities to see where demand is highest.
-   * Calculated total gross revenue (combining item prices and freight charges) and checked customer payment method preferences.
+<details>
+<summary><b>📂 Click to view the Core Relational Tables Schema</b></summary>
 
-2. **Supply Chain & Behavior (Queries 7–10):**
-   * Analyzed average freight shipping costs grouped by seller state to spot distance bottlenecks.
-   * Filtered out orders where actual delivery dates missed the promised estimate to protect customer trust.
-   * Isolated top product categories by sales and identified high-frequency repeat buyers using `HAVING` clauses.
+| File Name | Description & Primary Dimensions |
+| : করুণ | :--- |
+| `olist_customers_dataset.csv` | Customer geographic data and unique identifiers[cite: 1]. |
+| `olist_orders_dataset.csv` | Order lifecycles, operational statuses, and timestamps[cite: 1]. |
+| `olist_order_items_dataset.csv` | Individual item line prices and freight shipping costs[cite: 1]. |
+| `olist_order_payments_dataset.csv` | Payment methods (credit cards, boletos, vouchers) and amounts[cite: 1]. |
+| `olist_products_dataset.csv` | Product catalog metadata, categories, and attributes[cite: 1]. |
+| `olist_sellers_dataset.csv` | Merchant origin city and state locations[cite: 1]. |
+| `product_category_name_translation.csv` | Portuguese-to-English translations for product categories[cite: 1]. |
 
-3. **Advanced T-SQL & Window Functions (Queries 11–14):**
-   * Tracked chronological monthly revenue trends to spot seasonal sales spikes.
-   * Used Common Table Expressions (CTEs) paired with `RANK()` to build a customer spending leaderboard.
-   * Calculated running daily revenue totals and used `ROW_NUMBER() OVER (PARTITION BY ...)` to solve the classic challenge of finding the best-selling item in every single product category.
-
-4. **Database Automation (Query 15):**
-   * Wrapped complex multi-table join logic into a reusable, parameterized **Stored Procedure** (`GetCustomerOrdersAndPayments`). Now, customer support teams can pull a specific customer's complete order and payment history instantly using a single command.
-
----
-
-## 🚀 Quick Start Guide
-1. Grab the raw CSV files from the [Kaggle Dataset Link](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce).
-2. Import the tables into your local **MS SQL Server** database via SQL Server Management Studio (SSMS).
-3. Open up `sql/olist_complete_queries.sql` and run the queries to explore the findings yourself!
+</details>
 
 ---
-<div align="center">
-  <sub>Thanks for checking out the project! Feel free to explore the <code>sql/</code> folder for the complete source code.</sub>
-</div>
+
+## 🛠️ 3. How the T-SQL Analytical Pipeline Flows
+
+Here is a breakdown of how the 15 queries progress from raw database setup to advanced automation:
+
+```text
+[Raw Tables] ──> [Phase 1: Exploration] ──> [Phase 2: Logistics & Filter] ──> [Phase 3: Window Math & CTEs] ──> [Phase 4: Automation]
