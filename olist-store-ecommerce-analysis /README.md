@@ -1,9 +1,9 @@
 <div align="center">
 
 # 📦 Olist E-Commerce Analytics & T-SQL Pipeline
-*Transforming raw Brazilian marketplace logs into actionable business intelligence using MS SQL Server.*
+*Exploring 100,000+ real-world Brazilian marketplace orders using MS SQL Server.*
 
-<img src="https://miro.medium.com/0*A4BVgM4TzQPa0nHe" alt="Olist Logo" width="250"/>
+<img src="https://miro.medium.com/0*A4BVgM4TzQPa0nHe" alt="Olist Logo" width="280"/>
 
 <p>
   <img src="https://img.shields.io/badge/Platform-MS%20SQL%20Server-red?style=for-the-badge&logo=microsoft-sql-server" />
@@ -15,67 +15,60 @@
 
 ---
 
-## 🎯 Executive Summary
-Olist connects small-to-medium-sized merchants across Brazil to major e-commerce marketplaces. Managing thousands of distributed rows across customers, orders, payments, and shipping logs requires robust data handling. This project implements a **15-query production-grade analytical pipeline** in T-SQL to solve core business problems ranging from customer behavior patterns and logistics delays to advanced revenue window functions and database automation.
+## 🚀 About the Project
+Olist is a major Brazilian e-commerce platform that connects small local merchants with online buyers under a single roof. Managing thousands of transactions, shipping logs, customer profiles, and product details across multiple tables can get messy very quickly. 
+
+For this project, I built a complete **15-query T-SQL analytical workflow** in MS SQL Server to turn raw transactional logs into clear, actionable business insights. Think of it like an assembly line: we start by looking at basic customer counts and revenue, move into handling logistics and shipping delays, apply advanced window math, and finish by building an automated tool for customer support.
 
 ---
 
-## 📊 Dataset Information
-This project utilizes the official **Brazilian E-Commerce Public Dataset by Olist**, hosted on Kaggle. The dataset contains information on 100,000 orders from 2016 to 2018 made at multiple marketplaces in Brazil. It allows orders to be viewed across multiple dimensions including order status, pricing, payment, freight performance, customer locations, and product attributes.
+## 📊 Dataset Details
+This project uses the official **Brazilian E-Commerce Public Dataset by Olist**, available on Kaggle. It covers roughly **100,000 orders placed between 2016 and 2018** across various marketplaces in Brazil. 
 
 * **Source / Official Link:** [Kaggle - Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
-* **Core Tables Used in Schema:**
-  * `olist_customers_dataset.csv` (Customer geographic data and unique IDs)
-  * `olist_orders_dataset.csv` (Order lifecycle, statuses, and timestamps)
-  * `olist_order_items_dataset.csv` (Individual product line items, prices, and freight shipping values)
-  * `olist_order_payments_dataset.csv` (Payment methods and transaction values)
-  * `olist_products_dataset.csv` (Product catalog details and categories)
-  * `olist_sellers_dataset.csv` (Merchant origin locations)
-  * `product_category_name_translation.csv` (English translations for product categories)
+* **Fun Fact:** The data is fully anonymized, and store partners in the review texts were replaced with *Game of Thrones* great house names!
+
+### Core Tables Used in the Database:
+* `olist_customers_dataset.csv` — Customer geographic info and unique IDs.
+* `olist_orders_dataset.csv` — Order lifecycles, statuses, and purchase/delivery timestamps.
+* `olist_order_items_dataset.csv` — Individual item line prices and freight shipping costs.
+* `olist_order_payments_dataset.csv` — Payment methods (credit cards, boletos, vouchers) and transaction amounts.
+* `olist_products_dataset.csv` — Product catalog data and categories.
+* `olist_sellers_dataset.csv` — Merchant origin city and state locations.
+* `product_category_name_translation.csv` — Portuguese-to-English translations for categories.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
-* **Database Management System:** MS SQL Server (T-SQL)
-* **Environment:** SQL Server Management Studio (SSMS)
-* **Core Concepts:** Multi-table Joins, Aggregations, Common Table Expressions (CTEs), Window Functions (`RANK`, `ROW_NUMBER`, Running Totals), and Stored Procedures.
+## 🛠️ How the SQL Script Flows (Step-by-Step)
 
----
+Here is a quick look at what the 15 queries actually accomplish, broken down by how the analysis progresses:
 
-## 💡 Key Business Questions & Analytical Insights
+1. **Foundational Exploration (Queries 1–6):** 
+   * Counted unique physical customers (`COUNT DISTINCT`) to find our true user base size.
+   * Mapped the top 5 customer cities to see where demand is highest.
+   * Calculated total gross revenue (combining item prices and freight charges) and checked customer payment method preferences.
 
-> **1. Customer & Geographic Spread**
-> * **Unique Customer Reach:** Counted unique physical customers (`COUNT DISTINCT`) to track the true user base size rather than individual order IDs.
-> * **City Concentration:** Pinpointed the top 5 city hubs with the highest customer density to guide regional logistics planning and targeted marketing.
+2. **Supply Chain & Behavior (Queries 7–10):**
+   * Analyzed average freight shipping costs grouped by seller state to spot distance bottlenecks.
+   * Filtered out orders where actual delivery dates missed the promised estimate to protect customer trust.
+   * Isolated top product categories by sales and identified high-frequency repeat buyers using `HAVING` clauses.
 
-> **2. Financial & Payment Behavior**
-> * **Gross Revenue:** Computed total revenue combining product prices and freight shipping values to gauge overall marketplace economic scale.
-> * **Payment Preferences:** Grouped financial transaction volumes across payment methods (credit cards, boletos, vouchers) to understand customer checkout habits.
+3. **Advanced T-SQL & Window Functions (Queries 11–14):**
+   * Tracked chronological monthly revenue trends to spot seasonal sales spikes.
+   * Used Common Table Expressions (CTEs) paired with `RANK()` to build a customer spending leaderboard.
+   * Calculated running daily revenue totals and used `ROW_NUMBER() OVER (PARTITION BY ...)` to solve the classic challenge of finding the best-selling item in every single product category.
 
-> **3. Supply Chain & Logistics Efficiency**
-> * **Freight Cost Analysis:** Calculated average freight shipping costs grouped by seller state to uncover distance barriers and geographical disparities.
-> * **Delivery Performance:** Filtered orders where actual delivery dates exceeded estimated dates to spot supply chain bottlenecks and protect customer trust.
-
-> **4. Product Category Performance & VIP Segmentation**
-> * **Top Revenue Categories:** Identified the top-performing product categories driving the highest total sales.
-> * **Repeat Buyer Identification:** Used `HAVING` clauses to isolate high-frequency repeat buyers (>5 orders) for VIP loyalty retention programs.
-> * **Monthly Revenue Trends:** Extracted year and month timestamps to map chronological revenue growth and seasonal purchasing spikes.
-
-> **5. Advanced Window Functions & Database Programmability**
-> * **Customer Spending Rank:** Combined Common Table Expressions (CTEs) with the `RANK()` window function to tier high-value customers.
-> * **Cumulative Revenue:** Built running daily totals using window frames over chronological revenue data.
-> * **Best-Selling Products:** Solved the "top item per category" problem using `ROW_NUMBER() OVER (PARTITION BY ...)` to highlight inventory star products.
-> * **Stored Procedure Automation:** Engineered a parameterized **Stored Procedure** (`GetCustomerOrdersAndPayments`) to instantly retrieve complete order histories and payment sums for any customer ID using a single command.
+4. **Database Automation (Query 15):**
+   * Wrapped complex multi-table join logic into a reusable, parameterized **Stored Procedure** (`GetCustomerOrdersAndPayments`). Now, customer support teams can pull a specific customer's complete order and payment history instantly using a single command.
 
 ---
 
 ## 🚀 Quick Start Guide
-1. Download the raw CSV files from the [Kaggle Dataset Link](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce).
-2. Import the tables into your local **MS SQL Server** database.
-3. Open the script located in `sql/olist_complete_queries.sql` using SSMS.
-4. Execute queries sequentially or run the stored procedure test block at the bottom.
+1. Grab the raw CSV files from the [Kaggle Dataset Link](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce).
+2. Import the tables into your local **MS SQL Server** database via SQL Server Management Studio (SSMS).
+3. Open up `sql/olist_complete_queries.sql` and run the queries to explore the findings yourself!
 
 ---
 <div align="center">
-  <sub>Built with precision and SQL. Feel free to explore the queries!</sub>
+  <sub>Thanks for checking out the project! Feel free to explore the <code>sql/</code> folder for the complete source code.</sub>
 </div>
