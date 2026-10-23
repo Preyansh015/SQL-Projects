@@ -23,7 +23,7 @@ Hi there! I'm **Preyansh Raut**, a Data Science enthusiast. This repository hous
 
 | Project Name | Domain / Focus | Tech Stack & Core Skills | Quick Link |
 | :--- | :--- | :--- | :--- |
-| **📦 Olist E-Commerce Analytics** | E-Commerce / Marketplace Logistics & Revenue | MS SQL Server, T-SQL, CTEs, Window Functions, Stored Procedures | [View Project Folder](olist-store-ecommerce-analysis) |
+| **📦 Olist E-Commerce Analytics** | E-Commerce / Marketplace Logistics & Revenue | MS SQL Server, T-SQL, CTEs, Window Functions, Stored Procedures | **[View Project Folder](https://github.com/Preyansh015/SQL-Projects/tree/main/olist-store-ecommerce-analysis)** |
 
 *(More exciting data projects are currently in development and coming soon!)*
 
