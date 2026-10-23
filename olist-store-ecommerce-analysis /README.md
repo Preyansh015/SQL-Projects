@@ -3,7 +3,7 @@
 # 📦 Olist E-Commerce Analytics & T-SQL Pipeline
 *Transforming raw Brazilian marketplace logs into actionable business intelligence using MS SQL Server.*
 
-<img src="assets/olist_logo.png" alt="Olist Logo" width="250"/>
+<img src="https://miro.medium.com/0*A4BVgM4TzQPa0nHe" alt="Olist Logo" width="250"/>
 
 <p>
   <img src="https://img.shields.io/badge/Platform-MS%20SQL%20Server-red?style=for-the-badge&logo=microsoft-sql-server" />
